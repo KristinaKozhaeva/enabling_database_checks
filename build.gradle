@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+    id 'io.freefair.lombok' version '6.4.1'
+    id 'io.qameta.allure' version '2.9.6'
+}
+
+group 'com.kata'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
+
+    testImplementation 'io.qameta.allure:allure-junit5:2.18.1'
+}
+
+test {
+    useJUnitPlatform()
+}
