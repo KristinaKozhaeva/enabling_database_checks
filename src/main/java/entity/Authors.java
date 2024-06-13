@@ -3,13 +3,11 @@ package entity;
 import lombok.*;
 
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-@Getter
-@Setter
+@NoArgsConstructor
+@Data
 public class Authors {
 
-    private long authorId;
+    private long Id;
     private String firstName;
     private String familyName;
     private String secondName;

@@ -9,5 +9,4 @@ import lombok.Data;
 public class RequestGetBooksXML {
 
     private Authors author;
-    private int id;
 }

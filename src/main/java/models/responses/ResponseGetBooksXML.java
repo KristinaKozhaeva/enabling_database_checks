@@ -9,12 +9,10 @@ import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ResponceGetBooks {
+public class ResponseGetBooksXML {
 
     private List<Books> books;
     private Authors author;
     private ErrorResponse error;
 
 }
-
-
