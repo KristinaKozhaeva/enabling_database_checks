@@ -9,6 +9,6 @@ public class Books {
 
     private long id;
     private String bookTitle;
-    private Authors author;
+    private Authors authorID;
 
 }

@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'io.freefair.lombok' version '6.4.1'
     id 'io.qameta.allure' version '2.9.6'
+
 }
 
 group 'com.kata'
@@ -21,6 +22,17 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
 
     testImplementation 'io.qameta.allure:allure-junit5:2.18.1'
+
+    implementation group: 'io.rest-assured', name: 'rest-assured', version: '5.3.0'
+
+    implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.16.2'
+
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+
+    implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.1'
+
+    implementation 'org.slf4j:slf4j-api:2.0.13'
+    runtimeOnly 'org.slf4j:slf4j-nop:2.0.13'
 }
 
 test {

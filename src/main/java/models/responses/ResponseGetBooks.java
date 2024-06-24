@@ -5,14 +5,19 @@ import entity.Authors;
 import entity.Books;
 import lombok.Data;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@XmlRootElement
 public class ResponseGetBooks {
 
     private List<Books> books;
-    private ErrorResponse error;
+
+    private int errorCode;
+    private String errorMessage;
+    private String errorDetails;
 
 }
 
