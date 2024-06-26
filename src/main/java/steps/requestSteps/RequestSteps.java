@@ -1,38 +1,43 @@
 package steps.requestSteps;
 
 import configuration.RequestBuilder;
-import io.restassured.response.Response;
 import models.requests.RequestGetBooks;
-import models.requests.RequestGetBooksXML;
+import models.requests.RequestPostBooksXML;
 import models.requests.RequestSaveBooks;
+import models.responses.ResponseGetBooks;
+import models.responses.ResponsePostBooksXML;
+import models.responses.ResponseSaveBooks;
 
 import static io.restassured.RestAssured.given;
 
 public class RequestSteps {
 
-    public static Response getBooksByAuthor(RequestGetBooks request) {
+    public static ResponseGetBooks getBooksByAuthor(RequestGetBooks request) {
         return given()
                 .spec(RequestBuilder.requestGetBookSpec())
                 .body(request)
                 .pathParam("authorId", request.getAuthorId())
                 .when()
-                .get("/authors/{authorId}/books");
+                .get("/authors/{authorId}/books")
+                .as(ResponseGetBooks.class);
     }
 
-    public static Response getBooksByAuthorXML(RequestGetBooksXML requestGetBooksXML) {
+    public static ResponsePostBooksXML getBooksByAuthorXML(RequestPostBooksXML requestPostBooksXML) {
         return given()
-                .spec(RequestBuilder.requestGetBookSpecXML())
-                .body(requestGetBooksXML)
+                .spec(RequestBuilder.requestPostBookSpecXML())
+                .body(requestPostBooksXML)
                 .when()
-                .get("/authors/books");
+                .post("/authors/books")
+                .as(ResponsePostBooksXML.class);
     }
 
-    public static Response saveBook(RequestSaveBooks requestSaveBooks) {
+    public static ResponseSaveBooks saveBook(RequestSaveBooks requestSaveBooks) {
         return given()
-                .spec(RequestBuilder.requesSaveBook())
+                .spec(RequestBuilder.requestSaveBookSpec())
                 .body(requestSaveBooks)
                 .when()
-                .post("/books/save");
+                .post("/books/save")
+                .as(ResponseSaveBooks.class);
     }
 }
 

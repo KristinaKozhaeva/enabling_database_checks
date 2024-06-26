@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @XmlRootElement
-public class ResponseGetBooksXML {
+public class ResponsePostBooksXML {
 
     private List<Books> books;
     private Authors author;
