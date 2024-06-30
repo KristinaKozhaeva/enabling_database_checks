@@ -12,31 +12,24 @@ import static io.restassured.RestAssured.given;
 
 public class RequestSteps {
 
-    public static ResponseGetBooks getBooksByAuthor(RequestGetBooks request) {
+    public static ResponseGetBooks getBooksByAuthor(RequestGetBooks requestGetBooks) {
         return given()
-                .spec(RequestBuilder.requestGetBookSpec())
-                .body(request)
-                .pathParam("authorId", request.getAuthorId())
-                .when()
-                .get("/authors/{authorId}/books")
+                .spec(RequestBuilder.requestGetBookSpec(requestGetBooks))
+                .get()
                 .as(ResponseGetBooks.class);
     }
 
     public static ResponsePostBooksXML getBooksByAuthorXML(RequestPostBooksXML requestPostBooksXML) {
         return given()
-                .spec(RequestBuilder.requestPostBookSpecXML())
-                .body(requestPostBooksXML)
-                .when()
-                .post("/authors/books")
+                .spec(RequestBuilder.requestPostBookSpecXML(requestPostBooksXML))
+                .post()
                 .as(ResponsePostBooksXML.class);
     }
 
     public static ResponseSaveBooks saveBook(RequestSaveBooks requestSaveBooks) {
         return given()
-                .spec(RequestBuilder.requestSaveBookSpec())
-                .body(requestSaveBooks)
-                .when()
-                .post("/books/save")
+                .spec(RequestBuilder.requestSaveBookSpec(requestSaveBooks))
+                .post()
                 .as(ResponseSaveBooks.class);
     }
 }

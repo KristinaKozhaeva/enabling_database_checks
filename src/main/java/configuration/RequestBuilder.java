@@ -5,33 +5,41 @@ import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import models.requests.RequestGetBooks;
+import models.requests.RequestPostBooksXML;
+import models.requests.RequestSaveBooks;
 
 public class RequestBuilder {
 
     private static final String BASE_URL = "http://localhost:8080/library";
 
-    public static RequestSpecBuilder specBuilder() {
+    private static RequestSpecBuilder baseSpecBuilder() {
         return new RequestSpecBuilder()
+                .setContentType(ContentType.JSON)
                 .setBaseUri(BASE_URL)
                 .addFilter(new RequestLoggingFilter())
-                .addFilter(new ResponseLoggingFilter())
-                .setContentType(ContentType.JSON);
+                .addFilter(new ResponseLoggingFilter());
     }
 
-    public static RequestSpecification requestGetBookSpec() {
-        return specBuilder()
+    public static RequestSpecification requestGetBookSpec(RequestGetBooks requestGetBooks) {
+        return baseSpecBuilder()
+                .setBasePath(String.format("authors/%s/books", requestGetBooks.getAuthorId()))
                 .build();
     }
 
-    public static RequestSpecification requestPostBookSpecXML() {
-        return specBuilder()
+    public static RequestSpecification requestPostBookSpecXML(RequestPostBooksXML requestPostBooksXML) {
+        return baseSpecBuilder()
+                .setBasePath("authors/books")
                 .setContentType(ContentType.XML)
+                .setAccept(ContentType.XML)
+                .setBody(requestPostBooksXML)
                 .build();
     }
 
-    public static RequestSpecification requestSaveBookSpec() {
-        return specBuilder()
+    public static RequestSpecification requestSaveBookSpec(RequestSaveBooks requestSaveBooks) {
+        return baseSpecBuilder()
+                .setBasePath("books/save")
+                .setBody(requestSaveBooks)
                 .build();
     }
-
 }

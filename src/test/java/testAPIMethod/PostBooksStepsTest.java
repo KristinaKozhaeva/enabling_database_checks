@@ -1,8 +1,10 @@
 package testAPIMethod;
 
 import configuration.RequestBuilder;
+import entity.Books;
 import io.qameta.allure.Description;
 
+import models.requests.RequestPostBooksXML;
 import models.requests.RequestSaveBooks;
 import entity.Authors;
 
@@ -11,18 +13,22 @@ import io.qameta.allure.Story;
 import models.responses.ResponseSaveBooks;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import steps.asserts.GetBookAssertions;
 import steps.asserts.SaveBooksAssertions;
 
-import static io.restassured.RestAssured.given;
+import java.util.List;
 
-@Epic("Post-запросы")
+import static io.restassured.RestAssured.given;
+import static steps.requestSteps.RequestSteps.saveBook;
+
+@Epic("Запросы на сохранение книг")
 @Story("Сохранение книг автора")
 public class PostBooksStepsTest {
 
     @Test
     @DisplayName("Сохранение новой книги")
     @Description("Новая книга автора успешно сохранена")
-    public void testSaveBook() {
+    public void saveNewBookTest() {
         Authors author = new Authors();
         author.setId(88);
 
@@ -30,15 +36,10 @@ public class PostBooksStepsTest {
         requestSaveBooks.setBookTitle("Преступление и наказание");
         requestSaveBooks.setAuthor(author);
 
-        ResponseSaveBooks responseSaveBooks = given()
-                .spec(RequestBuilder.requestSaveBookSpec())
-                .body(requestSaveBooks)
-                .when()
-                .post("/save")
-                .then()
-                .extract().as(ResponseSaveBooks.class);
+        ResponseSaveBooks responseSaveBooks = saveBook(requestSaveBooks);
 
         SaveBooksAssertions.assertResponseSaveBooks(responseSaveBooks);
     }
 
 }
+
