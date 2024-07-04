@@ -7,6 +7,7 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import models.requests.RequestGetBooks;
 import models.requests.RequestPostBooksXML;
+import models.requests.RequestSaveAuthors;
 import models.requests.RequestSaveBooks;
 
 public class RequestBuilder {
@@ -40,6 +41,13 @@ public class RequestBuilder {
         return baseSpecBuilder()
                 .setBasePath("books/save")
                 .setBody(requestSaveBooks)
+                .build();
+    }
+
+    public static RequestSpecification requestSaveAuthorSpec(RequestSaveAuthors requestSaveAuthors){
+        return baseSpecBuilder()
+                .setBasePath("authors/save")
+                .setBody(requestSaveAuthors)
                 .build();
     }
 }

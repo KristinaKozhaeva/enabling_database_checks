@@ -4,7 +4,9 @@ import configuration.RequestBuilder;
 import entity.Books;
 import models.requests.RequestGetBooks;
 import models.requests.RequestPostBooksXML;
+import models.requests.RequestSaveAuthors;
 import models.requests.RequestSaveBooks;
+import models.responses.ResponseSaveAuthors;
 import models.responses.ResponseSaveBooks;
 
 import java.util.List;
@@ -39,5 +41,13 @@ public class RequestSteps {
                 .post()
                 .as(ResponseSaveBooks.class);
     }
+
+    public static ResponseSaveAuthors saveAuthor(RequestSaveAuthors requestSaveAuthor)  {
+        return given()
+                .spec(RequestBuilder.requestSaveAuthorSpec(requestSaveAuthor))
+                .post()
+                .as(ResponseSaveAuthors.class);
+    }
+
 }
 
