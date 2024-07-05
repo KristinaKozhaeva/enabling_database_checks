@@ -1,22 +1,21 @@
 package testAPIMethod;
 
-import configuration.RequestBuilder;
 import io.qameta.allure.Description;
 
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import models.requests.RequestSaveBooks;
 import entity.Authors;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Story;
 import models.responses.ResponseSaveBooks;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.asserts.SaveBooksAssertions;
+import steps.requestSteps.RequestSteps;
 import utils.DataHelper;
 
-import static io.restassured.RestAssured.given;
 import static steps.requestSteps.RequestSteps.saveBook;
 
 @Epic("Запросы на сохранение книг")
@@ -27,8 +26,7 @@ public class PostBooksStepsTest {
     @DisplayName("Сохранение новой книги")
     @Description("Новая книга автора успешно сохранена. Позитивный тест")
     public void testSaveNewBookTest() {
-        Authors author = new Authors();
-        author.setId(88);
+        Authors author = DataHelper.getSavedAuthor();
 
         RequestSaveBooks requestSaveBooks = new RequestSaveBooks();
         requestSaveBooks.setBookTitle("Преступление и наказание");
@@ -36,12 +34,14 @@ public class PostBooksStepsTest {
 
         ResponseSaveBooks responseSaveBooks = saveBook(requestSaveBooks);
 
+        Assertions.assertNotNull(responseSaveBooks, "Response is null");
+
         SaveBooksAssertions.assertResponseSaveBooks(responseSaveBooks);
     }
 
     @Test
     @DisplayName("Сохранение новой книги без названия. Негативный тест")
-    @Description("Сервис возвращает ошибку “Не передан обязательный параметр” и Http код = 400")
+    @Description("Сервис возвращает ошибку 'Не передан обязательный параметр' и Http код = 400")
     public void testSaveBookWithoutTitle() {
         Authors author = DataHelper.getSavedAuthor();
 
@@ -49,17 +49,14 @@ public class PostBooksStepsTest {
         requestSaveBooks.setBookTitle(null);
         requestSaveBooks.setAuthor(author);
 
-        Response response = given()
-                .spec(RequestBuilder.requestSaveBookSpec(requestSaveBooks))
-                .post();
+        Response response = RequestSteps.saveBookAndGetResponse(requestSaveBooks);
 
         SaveBooksAssertions.checkStatusCodeForSave(response, 400);
     }
 
-
     @Test
     @DisplayName("Сохранение новой книги не сохраненного автора. Негативный тест")
-    @Description("Сервис возвращает ошибку: “Указанный автор не существует в таблице” и Http код = 400")
+    @Description("Сервис возвращает ошибку: 'Указанный автор не существует в таблице' и Http код = 409")
     public void testSaveBookWithUnsavedAuthor() {
         Authors unregisteredAuthor = DataHelper.getUnsavedAuthor();
 
@@ -67,9 +64,7 @@ public class PostBooksStepsTest {
         requestSaveBooks.setBookTitle("Test Book Title");
         requestSaveBooks.setAuthor(unregisteredAuthor);
 
-        Response response = given()
-                .spec(RequestBuilder.requestSaveBookSpec(requestSaveBooks))
-                .post();
+        Response response = RequestSteps.saveBookAndGetResponse(requestSaveBooks);
 
         SaveBooksAssertions.checkStatusCodeForSave(response, 409);
     }
@@ -83,9 +78,7 @@ public class PostBooksStepsTest {
         requestSaveBooks.setBookTitle("преступление и наказание");
         requestSaveBooks.setAuthor(null);
 
-        Response response = given()
-                .spec(RequestBuilder.requestSaveBookSpec(requestSaveBooks))
-                .post();
+        Response response = RequestSteps.saveBookAndGetResponse(requestSaveBooks);
 
         SaveBooksAssertions.checkStatusCodeForSave(response, 400);
     }
@@ -96,11 +89,8 @@ public class PostBooksStepsTest {
     public void testSaveBookWithoutAuthorsID() {
 
         RequestSaveBooks book = DataHelper.getBookWithoutAuthorId();
-        RequestSpecification requestSpec = RequestBuilder.requestSaveBookSpec(book);
 
-        Response response = given()
-                .spec(requestSpec)
-                .post();
+        Response response = RequestSteps.saveBookAndGetResponse(book);
 
         SaveBooksAssertions.checkStatusCodeForSave(response, 400);
     }

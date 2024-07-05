@@ -1,6 +1,5 @@
 package testAPIMethod;
 
-import configuration.RequestBuilder;
 import entity.Authors;
 import entity.Books;
 import io.qameta.allure.Description;
@@ -18,9 +17,7 @@ import utils.DataHelper;
 
 import java.util.List;
 
-import static io.restassured.RestAssured.given;
 import static steps.asserts.GetBookAssertions.checkStatusCode;
-
 
 @Epic("Запросы на получение книг")
 @Story("Получение книг автора")
@@ -30,8 +27,10 @@ public class GetBooksStepsTest {
     @DisplayName("Получение книг автора. Позитивный тест")
     @Description("Книги автора успешно получены")
     public void testGetBooksByAuthor() {
+        Authors author = DataHelper.getSavedAuthor();
+
         RequestGetBooks requestGetBooks = new RequestGetBooks();
-        requestGetBooks.setAuthorId("12");
+        requestGetBooks.setAuthorId(String.valueOf(author.getId()));
 
         List<Books> booksList = RequestSteps.getBooksByAuthor(requestGetBooks);
 
@@ -42,9 +41,9 @@ public class GetBooksStepsTest {
     @DisplayName("Получение книг в формате XML. Позитивный тест")
     @Description("Получены книги в формате XML")
     public void testBooksByAuthorPostXML() {
+        Authors author = DataHelper.getSavedAuthor();
+
         RequestPostBooksXML requestPostBooksXML = new RequestPostBooksXML();
-        Authors author = new Authors();
-        author.setId(66);
         requestPostBooksXML.setAuthor(author);
 
         List<Books> booksList = RequestSteps.getBooksByAuthorXML(requestPostBooksXML);
@@ -52,53 +51,43 @@ public class GetBooksStepsTest {
         GetBookAssertions.assertBooksListNotNullAndNotEmpty(booksList);
     }
 
-
     @Test
     @DisplayName("Получение книг не сохраненного автора в формате json. Негативный тест")
-    @Description("Сервис возвращает http код ошибки = 400 с описанием: “Указанный автор не существует в таблице”")
-    public void successGetBooksByAuthor() {
+    @Description("Сервис возвращает http код ошибки = 400 с описанием: “Указанный автор не существует в таблице”") // Насколько я понимю, здесь мы по фт
+    public void successGetBooksByAuthor() {                                                                        //ожидаем именно 400 ошибкку, а 409 только в запросах на сохранение
+        Authors author = DataHelper.getUnsavedAuthor();
 
         RequestGetBooks requestGetBooks = new RequestGetBooks();
-        requestGetBooks.setAuthorId("888");
+        requestGetBooks.setAuthorId(String.valueOf(author.getId()));
 
-        Response response = given()
-                .spec(RequestBuilder.requestGetBookSpec(requestGetBooks))
-                .get();
+        Response response = RequestSteps.getBooksByAuthorAndGetResponse(requestGetBooks);
 
         GetBookAssertions.checkStatusCode(response, 400);
     }
 
     @Test
     @DisplayName("Получение книг несохраненного автора в формате xml. Негативный тест")
-    @Description("Сервис возвращает Http код ошибки = 400 с описанием: “Указанный автор не существует в таблице”")
-    public void testGetBookUnsavedAuthorXML() {
+    @Description("Сервис возвращает Http код ошибки = 400 с описанием: “Указанный автор не существует в таблице”") // Насколько я понимю, здесь мы по фт
+    public void testGetBookUnsavedAuthorXML() {                                                                    //ожидаем именно 400 ошибкку, а 409 только в запросах на сохранение
+        Authors author = DataHelper.getUnsavedAuthor();
+
         RequestPostBooksXML requestPostBooksXML = new RequestPostBooksXML();
-        Authors author = new Authors();
-        author.setId(888);
         requestPostBooksXML.setAuthor(author);
 
-        Response response = given()
-                .spec(RequestBuilder.requestPostBookSpecXML(requestPostBooksXML))
-                .post();
+        Response response = RequestSteps.getBooksByAuthorXMLAndGetResponse(requestPostBooksXML);
 
         checkStatusCode(response, 400);
-
     }
-
 
     @Test
     @DisplayName("Получение книг автора с незаполненным ID автора json. Негативный тест")
     @Description("Сервис возвращает http код ошибки = 400")
     public void testGetBookWithoutId() {
-
         RequestGetBooks requestGetBooks = new RequestGetBooks();
 
-        Response response = given()
-                .spec(RequestBuilder.requestGetBookSpec(requestGetBooks))
-                .get();
+        Response response = RequestSteps.getBooksByAuthorAndGetResponse(requestGetBooks);
 
         checkStatusCode(response, 400);
-
     }
 
     @Test
@@ -109,12 +98,9 @@ public class GetBooksStepsTest {
         Authors author = new Authors();
         requestPostBooksXML.setAuthor(author);
 
-        Response response = given()
-                .spec(RequestBuilder.requestPostBookSpecXML(requestPostBooksXML))
-                .post();
+        Response response = RequestSteps.getBooksByAuthorXMLAndGetResponse(requestPostBooksXML);
 
         checkStatusCode(response, 400);
-
     }
 
     @Test
@@ -124,18 +110,14 @@ public class GetBooksStepsTest {
         Authors author = DataHelper.getSavedAuthorWithoutBooks();
 
         RequestGetBooks requestGetBooks = new RequestGetBooks();
-
         requestGetBooks.setAuthorId(String.valueOf(author.getId()));
 
         List<Books> booksList = RequestSteps.getBooksByAuthor(requestGetBooks);
 
-        Response response = given()
-                .spec(RequestBuilder.requestGetBookSpec(requestGetBooks))
-                .get();
+        Response response = RequestSteps.getBooksByAuthorAndGetResponse(requestGetBooks);
         GetBookAssertions.checkStatusCode(response, 200);
 
         GetBookAssertions.assertBooksListIsEmpty(booksList);
-
     }
 
     @Test
@@ -149,12 +131,9 @@ public class GetBooksStepsTest {
 
         List<Books> booksList = RequestSteps.getBooksByAuthorXML(requestPostBooksXML);
 
-        Response response = given()
-                .spec(RequestBuilder.requestPostBookSpecXML(requestPostBooksXML))
-                .post();
+        Response response = RequestSteps.getBooksByAuthorXMLAndGetResponse(requestPostBooksXML);
         GetBookAssertions.checkStatusCode(response, 200);
 
         GetBookAssertions.assertBooksListIsEmpty(booksList);
     }
-
 }

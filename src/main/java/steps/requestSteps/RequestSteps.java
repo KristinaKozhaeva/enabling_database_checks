@@ -2,6 +2,7 @@ package steps.requestSteps;
 
 import configuration.RequestBuilder;
 import entity.Books;
+import io.restassured.response.Response;
 import models.requests.RequestGetBooks;
 import models.requests.RequestPostBooksXML;
 import models.requests.RequestSaveAuthors;
@@ -49,5 +50,22 @@ public class RequestSteps {
                 .as(ResponseSaveAuthors.class);
     }
 
+    public static Response saveBookAndGetResponse(RequestSaveBooks requestSaveBooks) {
+        return given()
+                .spec(RequestBuilder.requestSaveBookSpec(requestSaveBooks))
+                .post();
+    }
+
+    public static Response getBooksByAuthorAndGetResponse(RequestGetBooks requestGetBooks) {
+        return given()
+                .spec(RequestBuilder.requestGetBookSpec(requestGetBooks))
+                .get();
+    }
+
+    public static Response getBooksByAuthorXMLAndGetResponse(RequestPostBooksXML requestPostBooksXML) {
+        return given()
+                .spec(RequestBuilder.requestPostBookSpecXML(requestPostBooksXML))
+                .post();
+    }
 }
 

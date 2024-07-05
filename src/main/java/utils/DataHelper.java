@@ -2,10 +2,10 @@ package utils;
 
 import configuration.RequestBuilder;
 import entity.Authors;
-import io.restassured.response.Response;
 import models.requests.RequestSaveAuthors;
 import models.requests.RequestSaveBooks;
 import models.responses.ResponseSaveAuthors;
+import steps.requestSteps.RequestSteps;
 
 import static io.restassured.RestAssured.given;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -14,27 +14,35 @@ public class DataHelper {
 
     public static Authors getSavedAuthor() {
 
-        String firstName = randomAlphabetic(2, 100);
-        String familyName = randomAlphabetic(2, 100);
-        String secondName = randomAlphabetic(2, 100);
-        Response response = given()
-                .spec(RequestBuilder.requestSaveAuthorSpec(new RequestSaveAuthors(firstName, familyName, secondName)))
-                .post();
+        String firstName = randomAlphabetic(10);
+        String familyName = randomAlphabetic(10);
+        String secondName = randomAlphabetic(10);
 
-        ResponseSaveAuthors savedAuthor = response.as(ResponseSaveAuthors.class);
+        RequestSaveAuthors request = new RequestSaveAuthors(firstName, familyName, secondName);
+        ResponseSaveAuthors response = given()
+                .spec(RequestBuilder.requestSaveAuthorSpec(request))
+                .post()
+                .as(ResponseSaveAuthors.class);
 
-        return new Authors(savedAuthor.getAuthorId(), firstName, familyName, secondName);
+        Authors author = new Authors(response.getAuthorId(), firstName, familyName, secondName);
+
+        RequestSaveBooks requestSaveBooks = new RequestSaveBooks();
+        requestSaveBooks.setBookTitle("Тестирование");
+        requestSaveBooks.setAuthor(author);
+        RequestSteps.saveBook(requestSaveBooks);
+
+        return author;
     }
 
     public static Authors getUnsavedAuthor() {
-        return new Authors(-1L, "Тестовый", "Автор", "несуществующий");
+        return new Authors(-1L, "Тестовый", "Автор", "Несуществующий");
     }
 
     public static RequestSaveBooks getBookWithoutAuthorId() {
         Authors author = new Authors();
-        author.setFirstName("Это");
-        author.setFamilyName("Фамилия");
-        author.setSecondName("Отчество");
+        author.setFirstName(randomAlphabetic(10));
+        author.setFamilyName(randomAlphabetic(10));
+        author.setSecondName(randomAlphabetic(10));
 
         RequestSaveBooks requestSaveBooks = new RequestSaveBooks();
         requestSaveBooks.setBookTitle("Книга без id автора");
@@ -45,32 +53,34 @@ public class DataHelper {
 
     public static Authors getSavedAuthorWithoutBooks() {
 
-        String firstName = "Автор";
-        String familyName = "автор";
-        String secondName = "тестовый";
-        Response response = given()
-                .spec(RequestBuilder.requestSaveAuthorSpec(new RequestSaveAuthors(firstName, familyName, secondName)))
-                .post();
+        String firstName = randomAlphabetic(10);
+        String familyName = randomAlphabetic(10);
+        String secondName = randomAlphabetic(10);
 
-        ResponseSaveAuthors savedAuthor = response.as(ResponseSaveAuthors.class);
+        RequestSaveAuthors request = new RequestSaveAuthors(firstName, familyName, secondName);
+        ResponseSaveAuthors response = given()
+                .spec(RequestBuilder.requestSaveAuthorSpec(request))
+                .post()
+                .as(ResponseSaveAuthors.class);
 
-        return new Authors(savedAuthor.getAuthorId(), firstName, familyName, secondName);
+        Authors author = new Authors(response.getAuthorId(), firstName, familyName, secondName);
+        return author;
     }
 
     public static Authors getSavedAuthorWithoutBooksXML() {
-        String firstName = "bfdbdf";
-        String familyName = "bdfb";
-        String secondName = "bdbfvvv";
+        String firstName = randomAlphabetic(10);
+        String familyName = randomAlphabetic(10);
+        String secondName = randomAlphabetic(10);
 
-        Response response = given()
-                .spec(RequestBuilder.requestSaveAuthorSpec(new RequestSaveAuthors(firstName, familyName, secondName)))
-                .post();
+        RequestSaveAuthors request = new RequestSaveAuthors(firstName, familyName, secondName);
+        ResponseSaveAuthors response = given()
+                .spec(RequestBuilder.requestSaveAuthorSpec(request))
+                .post()
+                .as(ResponseSaveAuthors.class);
 
-        ResponseSaveAuthors savedAuthor = response.as(ResponseSaveAuthors.class);
-
-        return new Authors(savedAuthor.getAuthorId(), firstName, familyName, secondName);
+        Authors author = new Authors(response.getAuthorId(), firstName, familyName, secondName);
+        return author;
     }
-
 }
 
 
