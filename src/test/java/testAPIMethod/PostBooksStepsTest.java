@@ -17,6 +17,7 @@ import steps.requestSteps.RequestSteps;
 import utils.DataHelper;
 
 import static steps.requestSteps.RequestSteps.saveBook;
+import static utils.ErrorMessages.*;
 
 @Epic("Запросы на сохранение книг")
 @Story("Сохранение книг автора")
@@ -52,6 +53,8 @@ public class PostBooksStepsTest {
         Response response = RequestSteps.saveBookAndGetResponse(requestSaveBooks);
 
         SaveBooksAssertions.checkStatusCodeForSave(response, 400);
+
+        SaveBooksAssertions.checkErrorMessageForSave(response, NO_BOOK_TITLE);
     }
 
     @Test
@@ -67,6 +70,8 @@ public class PostBooksStepsTest {
         Response response = RequestSteps.saveBookAndGetResponse(requestSaveBooks);
 
         SaveBooksAssertions.checkStatusCodeForSave(response, 409);
+
+        SaveBooksAssertions.checkErrorMessageForSave(response, AUTHOR_NOT_FOUND);
     }
 
     @Test
@@ -81,18 +86,22 @@ public class PostBooksStepsTest {
         Response response = RequestSteps.saveBookAndGetResponse(requestSaveBooks);
 
         SaveBooksAssertions.checkStatusCodeForSave(response, 400);
+
+        SaveBooksAssertions.checkErrorMessageForSave(response, NO_AUTHOR);
     }
 
     @Test
     @DisplayName("Сохранение новой книги без ID автора. Негативный тест")
-    @Description("Сервис возвращает ошибку и http код = 400")
+    @Description("Сервис возвращает ошибку и http код = 409")
     public void testSaveBookWithoutAuthorsID() {
 
         RequestSaveBooks book = DataHelper.getBookWithoutAuthorId();
 
         Response response = RequestSteps.saveBookAndGetResponse(book);
 
-        SaveBooksAssertions.checkStatusCodeForSave(response, 400);
+        SaveBooksAssertions.checkStatusCodeForSave(response, 409);
+
+        SaveBooksAssertions.checkErrorMessageForSave(response, AUTHOR_NOT_FOUND);
     }
 }
 

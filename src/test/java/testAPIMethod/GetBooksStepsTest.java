@@ -18,6 +18,8 @@ import utils.DataHelper;
 import java.util.List;
 
 import static steps.asserts.GetBookAssertions.checkStatusCode;
+import static utils.ErrorMessages.AUTHOR_NOT_FOUND;
+import static utils.ErrorMessages.INVALID_REQUIRED_PARAMETER;
 
 @Epic("Запросы на получение книг")
 @Story("Получение книг автора")
@@ -53,8 +55,8 @@ public class GetBooksStepsTest {
 
     @Test
     @DisplayName("Получение книг не сохраненного автора в формате json. Негативный тест")
-    @Description("Сервис возвращает http код ошибки = 400 с описанием: “Указанный автор не существует в таблице”") // Насколько я понимю, здесь мы по фт
-    public void successGetBooksByAuthor() {                                                                        //ожидаем именно 400 ошибкку, а 409 только в запросах на сохранение
+    @Description("Сервис возвращает http код ошибки = 400 с описанием: “Указанный автор не существует в таблице”")
+    public void successGetBooksByAuthor() {
         Authors author = DataHelper.getUnsavedAuthor();
 
         RequestGetBooks requestGetBooks = new RequestGetBooks();
@@ -62,13 +64,15 @@ public class GetBooksStepsTest {
 
         Response response = RequestSteps.getBooksByAuthorAndGetResponse(requestGetBooks);
 
-        GetBookAssertions.checkStatusCode(response, 400);
+        GetBookAssertions.checkStatusCode(response, 409);
+
+        GetBookAssertions.asserErrorMessage(response, AUTHOR_NOT_FOUND);
     }
 
     @Test
     @DisplayName("Получение книг несохраненного автора в формате xml. Негативный тест")
-    @Description("Сервис возвращает Http код ошибки = 400 с описанием: “Указанный автор не существует в таблице”") // Насколько я понимю, здесь мы по фт
-    public void testGetBookUnsavedAuthorXML() {                                                                    //ожидаем именно 400 ошибкку, а 409 только в запросах на сохранение
+    @Description("Сервис возвращает Http код ошибки = 400 с описанием: “Указанный автор не существует в таблице”")
+    public void testGetBookUnsavedAuthorXML() {
         Authors author = DataHelper.getUnsavedAuthor();
 
         RequestPostBooksXML requestPostBooksXML = new RequestPostBooksXML();
@@ -76,7 +80,9 @@ public class GetBooksStepsTest {
 
         Response response = RequestSteps.getBooksByAuthorXMLAndGetResponse(requestPostBooksXML);
 
-        checkStatusCode(response, 400);
+        checkStatusCode(response, 409);
+
+        GetBookAssertions.asserErrorMessageXML(response, AUTHOR_NOT_FOUND);
     }
 
     @Test
@@ -88,6 +94,8 @@ public class GetBooksStepsTest {
         Response response = RequestSteps.getBooksByAuthorAndGetResponse(requestGetBooks);
 
         checkStatusCode(response, 400);
+
+        GetBookAssertions.asserErrorMessage(response, INVALID_REQUIRED_PARAMETER);
     }
 
     @Test
@@ -100,7 +108,9 @@ public class GetBooksStepsTest {
 
         Response response = RequestSteps.getBooksByAuthorXMLAndGetResponse(requestPostBooksXML);
 
-        checkStatusCode(response, 400);
+        checkStatusCode(response, 409);
+
+        GetBookAssertions.asserErrorMessageXML(response, INVALID_REQUIRED_PARAMETER);
     }
 
     @Test

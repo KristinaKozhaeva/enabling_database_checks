@@ -67,5 +67,20 @@ public class RequestSteps {
                 .spec(RequestBuilder.requestPostBookSpecXML(requestPostBooksXML))
                 .post();
     }
-}
 
+
+    public static String getErrorMessage(Response response) {
+        return response
+                .then()
+                .extract()
+                .path("errorMessage");
+    }
+
+    public static String getErrorMessageXML(Response response) {
+        return response
+                .then()
+                .extract()
+                .xmlPath()
+                .getString("errorMessage");
+    }
+}
