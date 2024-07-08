@@ -2,6 +2,7 @@ package utils;
 
 import configuration.RequestBuilder;
 import entity.Authors;
+import entity.Books;
 import models.requests.RequestSaveAuthors;
 import models.requests.RequestSaveBooks;
 import models.responses.ResponseSaveAuthors;

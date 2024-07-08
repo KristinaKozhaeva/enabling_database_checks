@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlElement;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL) ////
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @XmlAccessorType(XmlAccessType.NONE)
 public class Authors {
 

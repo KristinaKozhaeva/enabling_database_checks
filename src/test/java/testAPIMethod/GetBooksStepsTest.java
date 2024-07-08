@@ -37,7 +37,10 @@ public class GetBooksStepsTest {
         List<Books> booksList = RequestSteps.getBooksByAuthor(requestGetBooks);
 
         GetBookAssertions.assertBooksListNotNullAndNotEmpty(booksList);
+
+        GetBookAssertions.assertBooksMatchAuthor(booksList, author.getId());
     }
+
 
     @Test
     @DisplayName("Получение книг в формате XML. Позитивный тест")
@@ -51,6 +54,8 @@ public class GetBooksStepsTest {
         List<Books> booksList = RequestSteps.getBooksByAuthorXML(requestPostBooksXML);
 
         GetBookAssertions.assertBooksListNotNullAndNotEmpty(booksList);
+
+        GetBookAssertions.assertBooksMatchAuthor(booksList, author.getId());
     }
 
     @Test
