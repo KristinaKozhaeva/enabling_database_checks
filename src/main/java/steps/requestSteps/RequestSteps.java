@@ -23,7 +23,7 @@ public class RequestSteps {
                 .then()
                 .extract()
                 .jsonPath()
-                .getList("books", Books.class);
+                .getList(".", Books.class);
     }
 
     public static List<Books> getBooksByAuthorXML(RequestPostBooksXML requestPostBooksXML) {
@@ -59,6 +59,7 @@ public class RequestSteps {
     public static Response getBooksByAuthorAndGetResponse(RequestGetBooks requestGetBooks) {
         return given()
                 .spec(RequestBuilder.requestGetBookSpec(requestGetBooks))
+                .header("Authorization", "Bearer " + getAuthorizationToken())
                 .get();
     }
 
@@ -82,5 +83,15 @@ public class RequestSteps {
                 .extract()
                 .xmlPath()
                 .getString("errorMessage");
+    }
+
+    private static String getAuthorizationToken() {
+        Response response = given()
+                .spec(RequestBuilder.requestAuthTokenSpec())
+                .post();
+
+        return response
+                .jsonPath()
+                .getString("token");
     }
 }

@@ -30,23 +30,23 @@ public class GetBooksStepsTest {
     @Description("Книги автора успешно получены")
     public void testGetBooksByAuthor() {
         Authors author = DataHelper.getSavedAuthor();
+        Authors expectedAuthor = DataHelper.getExpectedAuthor(author);
 
         RequestGetBooks requestGetBooks = new RequestGetBooks();
-        requestGetBooks.setAuthorId(String.valueOf(author.getId()));
+        requestGetBooks.setId(String.valueOf(author.getId()));
 
         List<Books> booksList = RequestSteps.getBooksByAuthor(requestGetBooks);
 
         GetBookAssertions.assertBooksListNotNullAndNotEmpty(booksList);
-
-        GetBookAssertions.assertBooksMatchAuthor(booksList, author.getId());
+        GetBookAssertions.assertBooksMatchAuthor(booksList, expectedAuthor);
     }
-
 
     @Test
     @DisplayName("Получение книг в формате XML. Позитивный тест")
     @Description("Получены книги в формате XML")
     public void testBooksByAuthorPostXML() {
         Authors author = DataHelper.getSavedAuthor();
+        Authors expectedAuthor = DataHelper.getExpectedAuthor(author);
 
         RequestPostBooksXML requestPostBooksXML = new RequestPostBooksXML();
         requestPostBooksXML.setAuthor(author);
@@ -54,8 +54,7 @@ public class GetBooksStepsTest {
         List<Books> booksList = RequestSteps.getBooksByAuthorXML(requestPostBooksXML);
 
         GetBookAssertions.assertBooksListNotNullAndNotEmpty(booksList);
-
-        GetBookAssertions.assertBooksMatchAuthor(booksList, author.getId());
+        GetBookAssertions.assertBooksMatchAuthor(booksList, expectedAuthor);
     }
 
     @Test
@@ -65,7 +64,7 @@ public class GetBooksStepsTest {
         Authors author = DataHelper.getUnsavedAuthor();
 
         RequestGetBooks requestGetBooks = new RequestGetBooks();
-        requestGetBooks.setAuthorId(String.valueOf(author.getId()));
+        requestGetBooks.setId(String.valueOf(author.getId()));
 
         Response response = RequestSteps.getBooksByAuthorAndGetResponse(requestGetBooks);
 
@@ -125,7 +124,7 @@ public class GetBooksStepsTest {
         Authors author = DataHelper.getSavedAuthorWithoutBooks();
 
         RequestGetBooks requestGetBooks = new RequestGetBooks();
-        requestGetBooks.setAuthorId(String.valueOf(author.getId()));
+        requestGetBooks.setId(String.valueOf(author.getId()));
 
         List<Books> booksList = RequestSteps.getBooksByAuthor(requestGetBooks);
 

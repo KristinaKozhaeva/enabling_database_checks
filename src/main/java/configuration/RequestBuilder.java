@@ -5,14 +5,13 @@ import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
-import models.requests.RequestGetBooks;
-import models.requests.RequestPostBooksXML;
-import models.requests.RequestSaveAuthors;
-import models.requests.RequestSaveBooks;
+import models.requests.*;
+import utils.Credentials;
 
 public class RequestBuilder {
 
     private static final String BASE_URL = "http://localhost:8080/library";
+    private static final String AUTHORIZATION_URL = "http://localhost:8080";
 
     private static RequestSpecBuilder baseSpecBuilder() {
         return new RequestSpecBuilder()
@@ -24,7 +23,8 @@ public class RequestBuilder {
 
     public static RequestSpecification requestGetBookSpec(RequestGetBooks requestGetBooks) {
         return baseSpecBuilder()
-                .setBasePath(String.format("authors/%s/books", requestGetBooks.getAuthorId()))
+                .setBasePath(String.format("authors/%s/books", requestGetBooks.getId()))
+                .addHeader("Accept", "application/json")
                 .build();
     }
 
@@ -48,6 +48,14 @@ public class RequestBuilder {
         return baseSpecBuilder()
                 .setBasePath("authors/save")
                 .setBody(requestSaveAuthors)
+                .build();
+    }
+
+    public static RequestSpecification requestAuthTokenSpec() {
+        return new RequestSpecBuilder()
+                .setContentType(ContentType.JSON)
+                .setBaseUri(AUTHORIZATION_URL)
+                .setBody(String.format("{\"login\": \"%s\", \"password\": \"%s\"}", Credentials.getLogin(), Credentials.getPassword()))
                 .build();
     }
 }

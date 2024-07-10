@@ -2,7 +2,6 @@ package utils;
 
 import configuration.RequestBuilder;
 import entity.Authors;
-import entity.Books;
 import models.requests.RequestSaveAuthors;
 import models.requests.RequestSaveBooks;
 import models.responses.ResponseSaveAuthors;
@@ -69,6 +68,7 @@ public class DataHelper {
     }
 
     public static Authors getSavedAuthorWithoutBooksXML() {
+
         String firstName = randomAlphabetic(10);
         String familyName = randomAlphabetic(10);
         String secondName = randomAlphabetic(10);
@@ -81,6 +81,15 @@ public class DataHelper {
 
         Authors author = new Authors(response.getAuthorId(), firstName, familyName, secondName);
         return author;
+    }
+
+    public static Authors getExpectedAuthor(Authors actualAuthor) {
+        Authors expectedAuthor = new Authors();
+        expectedAuthor.setId(actualAuthor.getId());
+        expectedAuthor.setFirstName(actualAuthor.getFirstName());
+        expectedAuthor.setFamilyName(actualAuthor.getFamilyName());
+        expectedAuthor.setSecondName(actualAuthor.getSecondName());
+        return expectedAuthor;
     }
 }
 

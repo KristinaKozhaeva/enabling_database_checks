@@ -2,10 +2,10 @@ package steps.asserts;
 
 import entity.Books;
 import io.restassured.response.Response;
-import models.responses.ResponseSaveBooks;
 import steps.requestSteps.RequestSteps;
 
 import java.nio.charset.StandardCharsets;
+import entity.Authors;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -39,14 +39,22 @@ public class GetBookAssertions {
         assertThat(actualMessage, equalTo(new String(expectedMessage.getBytes(), StandardCharsets.UTF_8)));
     }
 
-    public static void assertBooksMatchAuthor(List<Books> books, long authorId) {
+    public static void assertBooksMatchAuthor(List<Books> books, Authors expectedAuthor) {
         assertNotNull(books);
-        assertTrue(books.size() > 0);
+        assertFalse(books.isEmpty());
 
         for (Books book : books) {
             assertNotNull(book);
-            assertNotNull(book.getAuthorID());
-            assertEquals(book.getAuthorID().getId(), authorId);
+            assertNotNull(book.getId());
+
+            Authors actualAuthor = book.getAuthorID();
+            assertNotNull(actualAuthor);
+
+            assertEquals(expectedAuthor.getId(), actualAuthor.getId());
+            assertEquals(expectedAuthor.getFirstName(), actualAuthor.getFirstName());
+            assertEquals(expectedAuthor.getFamilyName(), actualAuthor.getFamilyName());
+            assertEquals(expectedAuthor.getSecondName(), actualAuthor.getSecondName());
+
             assertNotNull(book.getBookTitle());
         }
     }

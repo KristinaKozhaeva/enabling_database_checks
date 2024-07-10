@@ -11,5 +11,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 public class RequestGetBooks {
 
-    private String authorId;
+    private String id;
+
 }

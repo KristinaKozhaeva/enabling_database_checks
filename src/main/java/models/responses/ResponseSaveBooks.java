@@ -15,5 +15,4 @@ public class ResponseSaveBooks {
     private int errorCode;
     private String errorMessage;
     private String errorDetails;
-
 }

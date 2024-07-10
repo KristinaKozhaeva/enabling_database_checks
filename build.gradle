@@ -34,6 +34,10 @@ dependencies {
 
     implementation 'org.slf4j:slf4j-api:2.0.13'
     runtimeOnly 'org.slf4j:slf4j-nop:2.0.13'
+
+        implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'  // или любая твоя текущая версия Jackson
+        implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
+
 }
 
 test {
