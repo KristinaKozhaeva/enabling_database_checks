@@ -8,13 +8,15 @@ import lombok.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@XmlAccessorType(XmlAccessType.NONE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "books")
 
 public class Books {
 
@@ -29,5 +31,4 @@ public class Books {
     @XmlElement(name = "author")
     @JsonProperty("author")
     private Authors authorID;
-
 }

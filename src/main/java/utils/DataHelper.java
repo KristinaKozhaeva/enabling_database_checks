@@ -2,6 +2,7 @@ package utils;
 
 import configuration.RequestBuilder;
 import entity.Authors;
+import entity.Books;
 import models.requests.RequestSaveAuthors;
 import models.requests.RequestSaveBooks;
 import models.responses.ResponseSaveAuthors;
@@ -14,9 +15,9 @@ public class DataHelper {
 
     public static Authors getSavedAuthor() {
 
-        String firstName = randomAlphabetic(10);
-        String familyName = randomAlphabetic(10);
-        String secondName = randomAlphabetic(10);
+        String firstName = randomAlphabetic(2,40);
+        String familyName = randomAlphabetic(2,40);
+        String secondName = randomAlphabetic(2,40);
 
         RequestSaveAuthors request = new RequestSaveAuthors(firstName, familyName, secondName);
         ResponseSaveAuthors response = given()
@@ -25,6 +26,7 @@ public class DataHelper {
                 .as(ResponseSaveAuthors.class);
 
         Authors author = new Authors(response.getAuthorId(), firstName, familyName, secondName);
+        System.out.println(author);
 
         RequestSaveBooks requestSaveBooks = new RequestSaveBooks();
         requestSaveBooks.setBookTitle("Тестирование");
@@ -40,9 +42,9 @@ public class DataHelper {
 
     public static RequestSaveBooks getBookWithoutAuthorId() {
         Authors author = new Authors();
-        author.setFirstName(randomAlphabetic(10));
-        author.setFamilyName(randomAlphabetic(10));
-        author.setSecondName(randomAlphabetic(10));
+        author.setFirstName(randomAlphabetic(2,40));
+        author.setFamilyName(randomAlphabetic(2,40));
+        author.setSecondName(randomAlphabetic(2,40));
 
         RequestSaveBooks requestSaveBooks = new RequestSaveBooks();
         requestSaveBooks.setBookTitle("Книга без id автора");
@@ -53,9 +55,9 @@ public class DataHelper {
 
     public static Authors getSavedAuthorWithoutBooks() {
 
-        String firstName = randomAlphabetic(10);
-        String familyName = randomAlphabetic(10);
-        String secondName = randomAlphabetic(10);
+        String firstName = randomAlphabetic(2,40);
+        String familyName = randomAlphabetic(2,40);
+        String secondName = randomAlphabetic(2,40);
 
         RequestSaveAuthors request = new RequestSaveAuthors(firstName, familyName, secondName);
         ResponseSaveAuthors response = given()
@@ -69,9 +71,9 @@ public class DataHelper {
 
     public static Authors getSavedAuthorWithoutBooksXML() {
 
-        String firstName = randomAlphabetic(10);
-        String familyName = randomAlphabetic(10);
-        String secondName = randomAlphabetic(10);
+        String firstName = randomAlphabetic(2,40);
+        String familyName = randomAlphabetic(2,40);
+        String secondName = randomAlphabetic(2,40);
 
         RequestSaveAuthors request = new RequestSaveAuthors(firstName, familyName, secondName);
         ResponseSaveAuthors response = given()
@@ -90,6 +92,15 @@ public class DataHelper {
         expectedAuthor.setFamilyName(actualAuthor.getFamilyName());
         expectedAuthor.setSecondName(actualAuthor.getSecondName());
         return expectedAuthor;
+    }
+
+    public static Books getExpectedBook(Books actualBook) {
+        Books expectedBook = new Books();
+        expectedBook.setId(actualBook.getId());
+        expectedBook.setBookTitle(actualBook.getBookTitle());
+        expectedBook.setAuthorID(actualBook.getAuthorID());
+
+        return expectedBook;
     }
 }
 

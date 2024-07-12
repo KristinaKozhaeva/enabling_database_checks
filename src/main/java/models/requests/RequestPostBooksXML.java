@@ -6,15 +6,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import entity.Authors;
 import lombok.Data;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@XmlAccessorType(XmlAccessType.FIELD)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @XmlRootElement
 public class RequestPostBooksXML {
 
+    @XmlElement(name = "author")
     @JsonProperty("author")
     private Authors author;
 

@@ -9,6 +9,7 @@ import io.restassured.response.Response;
 import models.requests.RequestGetBooks;
 
 import models.requests.RequestPostBooksXML;
+import models.responses.ResponsePostBooksXML;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.asserts.GetBookAssertions;
@@ -25,21 +26,22 @@ import static utils.ErrorMessages.INVALID_REQUIRED_PARAMETER;
 @Story("Получение книг автора")
 public class GetBooksStepsTest {
 
-    @Test
-    @DisplayName("Получение книг автора. Позитивный тест")
-    @Description("Книги автора успешно получены")
-    public void testGetBooksByAuthor() {
-        Authors author = DataHelper.getSavedAuthor();
-        Authors expectedAuthor = DataHelper.getExpectedAuthor(author);
+        @Test
+        @DisplayName("Получение книг автора. Позитивный тест")
+        @Description("Книги автора успешно получены")
+        public void testGetBooksByAuthor() {
+            Authors author = DataHelper.getSavedAuthor();
+            Authors expectedAuthor = DataHelper.getExpectedAuthor(author);
 
-        RequestGetBooks requestGetBooks = new RequestGetBooks();
-        requestGetBooks.setId(String.valueOf(author.getId()));
+            RequestGetBooks requestGetBooks = new RequestGetBooks();
+            requestGetBooks.setId(String.valueOf(author.getId()));
 
-        List<Books> booksList = RequestSteps.getBooksByAuthor(requestGetBooks);
+            List<Books> booksList = RequestSteps.getBooksByAuthor(requestGetBooks);
 
-        GetBookAssertions.assertBooksListNotNullAndNotEmpty(booksList);
-        GetBookAssertions.assertBooksMatchAuthor(booksList, expectedAuthor);
-    }
+            GetBookAssertions.assertBooksListNotNullAndNotEmpty(booksList);
+            GetBookAssertions.assertBooksMatchAuthor(booksList, expectedAuthor);
+        }
+
 
     @Test
     @DisplayName("Получение книг в формате XML. Позитивный тест")
@@ -51,10 +53,12 @@ public class GetBooksStepsTest {
         RequestPostBooksXML requestPostBooksXML = new RequestPostBooksXML();
         requestPostBooksXML.setAuthor(author);
 
-        List<Books> booksList = RequestSteps.getBooksByAuthorXML(requestPostBooksXML);
+        Response response = RequestSteps.getBooksByAuthorXMLAndGetResponse(requestPostBooksXML);
 
-        GetBookAssertions.assertBooksListNotNullAndNotEmpty(booksList);
-        GetBookAssertions.assertBooksMatchAuthor(booksList, expectedAuthor);
+        ResponsePostBooksXML responseAuthorsBooksXML = response.as(ResponsePostBooksXML.class);
+
+        GetBookAssertions.assertBooksListNotNullAndNotEmpty(responseAuthorsBooksXML.getBooks());
+        GetBookAssertions.assertBooksMatchAuthor(responseAuthorsBooksXML.getBooks(), expectedAuthor);
     }
 
     @Test

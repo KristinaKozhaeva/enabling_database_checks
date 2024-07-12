@@ -6,11 +6,12 @@ import steps.requestSteps.RequestSteps;
 
 import java.nio.charset.StandardCharsets;
 import entity.Authors;
-import java.util.List;
 
+import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static utils.DataHelper.getExpectedBook;
 
 public class GetBookAssertions {
 
@@ -39,23 +40,23 @@ public class GetBookAssertions {
         assertThat(actualMessage, equalTo(new String(expectedMessage.getBytes(), StandardCharsets.UTF_8)));
     }
 
-    public static void assertBooksMatchAuthor(List<Books> books, Authors expectedAuthor) {
-        assertNotNull(books);
-        assertFalse(books.isEmpty());
 
-        for (Books book : books) {
-            assertNotNull(book);
-            assertNotNull(book.getId());
+    public static void assertBooksMatchAuthor(List<Books> actualBooks, Authors expectedAuthor) {
+        assertNotNull(actualBooks);
+        assertFalse(actualBooks.isEmpty());
 
-            Authors actualAuthor = book.getAuthorID();
-            assertNotNull(actualAuthor);
+        for (Books actualBook : actualBooks) {
+            assertNotNull(actualBook);
+            assertNotNull(actualBook.getId());
 
-            assertEquals(expectedAuthor.getId(), actualAuthor.getId());
-            assertEquals(expectedAuthor.getFirstName(), actualAuthor.getFirstName());
-            assertEquals(expectedAuthor.getFamilyName(), actualAuthor.getFamilyName());
-            assertEquals(expectedAuthor.getSecondName(), actualAuthor.getSecondName());
+            Authors actualAuthorId = actualBook.getAuthorID();
+            assertNotNull(actualAuthorId);
 
-            assertNotNull(book.getBookTitle());
+            assertEquals(expectedAuthor.getId(), actualAuthorId.getId());
+
+            Books expectedBook = getExpectedBook(actualBook);
+
+            assertEquals(expectedBook.getBookTitle(), actualBook.getBookTitle());
         }
     }
 }

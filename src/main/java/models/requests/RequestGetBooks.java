@@ -12,5 +12,4 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class RequestGetBooks {
 
     private String id;
-
 }
