@@ -13,6 +13,7 @@ import models.responses.ResponseSaveBooks;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.parsing.Parser.JSON;
 
 public class RequestSteps {
 
@@ -21,6 +22,7 @@ public class RequestSteps {
                 .spec(RequestBuilder.requestGetBookSpec(requestGetBooks))
                 .get()
                 .then()
+                .parser("application/json", JSON)
                 .extract()
                 .jsonPath()
                 .getList(".", Books.class);
@@ -85,13 +87,15 @@ public class RequestSteps {
                 .getString("errorMessage");
     }
 
-    private static String getAuthorizationToken() {
+    public static String getAuthorizationToken() {
         Response response = given()
                 .spec(RequestBuilder.requestAuthTokenSpec())
-                .post();
+                .get();
+
+        System.out.println("Response body: " + response.getBody().asString());
 
         return response
                 .jsonPath()
-                .getString("token");
+                .getString("jwtToken");
     }
 }

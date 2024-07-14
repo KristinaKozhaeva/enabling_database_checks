@@ -11,6 +11,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.DataHelper.getExpectedBook;
 
 public class GetBookAssertions {
@@ -54,9 +55,13 @@ public class GetBookAssertions {
 
             assertEquals(expectedAuthor.getId(), actualAuthorId.getId());
 
+            assertEquals(expectedAuthor.getBirthDate(), actualAuthorId.getBirthDate());
+
             Books expectedBook = getExpectedBook(actualBook);
 
             assertEquals(expectedBook.getBookTitle(), actualBook.getBookTitle());
+
+            assertEquals(expectedBook.getUpdated(), actualBook.getUpdated());
         }
     }
 }

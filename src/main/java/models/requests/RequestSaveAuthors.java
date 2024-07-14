@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -17,4 +18,5 @@ public class RequestSaveAuthors {
     private String firstName;
     private String familyName;
     private String secondName;
+    private String birthDate;
 }

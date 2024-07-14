@@ -2,8 +2,8 @@ package utils;
 
 public class Credentials {
 
-    private static final String LOGIN = "test_log";
-    private static final String PASSWORD = "123qweasd";
+    private static final String LOGIN = "master_log";
+    private static final String PASSWORD = "qweasdzxc";
 
     public static String getLogin() {
         return LOGIN;

@@ -31,6 +31,7 @@ public class GetBooksStepsTest {
         @Description("Книги автора успешно получены")
         public void testGetBooksByAuthor() {
             Authors author = DataHelper.getSavedAuthor();
+
             Authors expectedAuthor = DataHelper.getExpectedAuthor(author);
 
             RequestGetBooks requestGetBooks = new RequestGetBooks();
@@ -87,6 +88,8 @@ public class GetBooksStepsTest {
         requestPostBooksXML.setAuthor(author);
 
         Response response = RequestSteps.getBooksByAuthorXMLAndGetResponse(requestPostBooksXML);
+
+        ResponsePostBooksXML booksResponse = response.as(ResponsePostBooksXML.class);
 
         checkStatusCode(response, 409);
 

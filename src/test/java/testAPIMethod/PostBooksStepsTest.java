@@ -36,7 +36,7 @@ public class PostBooksStepsTest {
 
         ResponseSaveBooks responseSaveBooks = saveBook(requestSaveBooks);
 
-        Assertions.assertNotNull(responseSaveBooks, "Response is null");
+        Assertions.assertNotNull(responseSaveBooks);
 
         SaveBooksAssertions.assertResponseSaveBooks(responseSaveBooks);
     }

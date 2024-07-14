@@ -36,5 +36,6 @@ public class SaveBooksAssertions {
         assertEquals(expected.getFirstName(), actual.getFirstName());
         assertEquals(expected.getFamilyName(), actual.getFamilyName());
         assertEquals(expected.getSecondName(), actual.getSecondName());
+        assertEquals(expected.getBirthDate(), actual.getBirthDate());
     }
 }

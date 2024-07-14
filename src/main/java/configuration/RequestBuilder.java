@@ -6,6 +6,7 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import models.requests.*;
+import steps.requestSteps.RequestSteps;
 import utils.Credentials;
 
 public class RequestBuilder {
@@ -17,6 +18,7 @@ public class RequestBuilder {
         return new RequestSpecBuilder()
                 .setContentType(ContentType.JSON)
                 .setBaseUri(BASE_URL)
+                .addHeader("Authorization", "Bearer " + RequestSteps.getAuthorizationToken())
                 .addFilter(new RequestLoggingFilter())
                 .addFilter(new ResponseLoggingFilter());
     }
@@ -53,8 +55,9 @@ public class RequestBuilder {
 
     public static RequestSpecification requestAuthTokenSpec() {
         return new RequestSpecBuilder()
-                .setContentType(ContentType.JSON)
                 .setBaseUri(AUTHORIZATION_URL)
+                .setBasePath("auth/login")
+                .setContentType(ContentType.JSON)
                 .setBody(String.format("{\"login\": \"%s\", \"password\": \"%s\"}", Credentials.getLogin(), Credentials.getPassword()))
                 .build();
     }
