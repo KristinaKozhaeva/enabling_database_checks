@@ -26,5 +26,4 @@ public class ResponsePostBooksXML {
     private int errorCode;
     private String errorMessage;
     private String errorDetails;
-
 }

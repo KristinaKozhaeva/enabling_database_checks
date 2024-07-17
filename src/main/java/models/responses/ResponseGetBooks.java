@@ -24,7 +24,6 @@ public class ResponseGetBooks {
 
     @JsonProperty("errorDetails")
     private String errorDetails;
-
 }
 
 
