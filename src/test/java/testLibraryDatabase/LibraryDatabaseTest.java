@@ -1,12 +1,15 @@
 package testLibraryDatabase;
 
+import entity.Authors;
 import entity.Books;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import steps.asserts.LibraryDatabaseAssertions;
 import steps.dataBaseSteps.DatabaseOperations;
 
+import java.util.Date;
 import java.util.List;
 
 @Epic("Тестирование базы данных")
@@ -23,18 +26,20 @@ public class LibraryDatabaseTest {
 
         operations.deleteAll();
 
-        operations.insertBooks(book1, 8L);
-        operations.insertBooks(book2, 88L);
+        Date currentDate = new Date();
+
+        operations.insertBooks(book1, 8L, currentDate);
+        operations.insertBooks(book2, 88L, currentDate);
 
         List<Books> books = operations.findAll();
-        System.out.println(books);
+        LibraryDatabaseAssertions.assertInitialBooks(books, 2);
 
         List<Books> firstBook = operations.findByBookTitle(book1);
-        System.out.println(firstBook);
+        LibraryDatabaseAssertions.assertFirstBook(firstBook);
 
         operations.deleteBookByTitle(book1);
 
         List<Books> secondBook = operations.findAll();
-        System.out.println(secondBook);
+        LibraryDatabaseAssertions.assertBooksAfterDelete(secondBook, 1);
     }
 }
