@@ -1,6 +1,5 @@
 package steps.asserts;
 
-import entity.Authors;
 import entity.Books;
 import org.junit.jupiter.api.Assertions;
 
@@ -22,9 +21,28 @@ public class LibraryDatabaseAssertions {
         Assertions.assertEquals(expectedSize, books.size());
     }
 
-    public static void assertAuthorFound(Authors author, String expectedFirstName, String expectedFamilyName) {
-        Assertions.assertNotNull(author);
-        Assertions.assertEquals(expectedFirstName, author.getFirstName());
-        Assertions.assertEquals(expectedFamilyName, author.getFamilyName());
+    public static void assertBooksMatchAuthor(List<Books> dbBooks, Books expectedBook) {
+        Assertions.assertNotNull(dbBooks);
+        Assertions.assertFalse(dbBooks.isEmpty());
+
+        Books dbBook = dbBooks.get(0);
+
+        Assertions.assertEquals(expectedBook.getBookTitle(), dbBook.getBookTitle());
+        Assertions.assertEquals(expectedBook.getAuthorID().getId(), dbBook.getAuthorID().getId());
+        Assertions.assertEquals(expectedBook.getUpdated(), dbBook.getUpdated());
+    }
+
+    public static void assertBookSaved(List<Books> dbBooks, String expectedTitle) {
+        Assertions.assertNotNull(dbBooks);
+        Assertions.assertFalse(dbBooks.isEmpty());
+
+        Books savedBook = dbBooks.get(0);
+
+        Assertions.assertEquals(expectedTitle, savedBook.getBookTitle());
+    }
+
+    public static void assertBooksListIsEmpty(List<Books> books) {
+        Assertions.assertNotNull(books);
+        Assertions.assertTrue(books.isEmpty());
     }
 }

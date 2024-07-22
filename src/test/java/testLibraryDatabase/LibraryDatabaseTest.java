@@ -1,6 +1,5 @@
 package testLibraryDatabase;
 
-import entity.Authors;
 import entity.Books;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Story;
@@ -19,7 +18,7 @@ public class LibraryDatabaseTest {
     private DatabaseOperations operations = new DatabaseOperations();
 
     @Test
-    @DisplayName("Тест для таблицы Book")
+    @DisplayName("Тест для таблицы Book и проверка соответствия данных с БД")
     public void databaseTest() {
         String book1 = "first book";
         String book2 = "second book";

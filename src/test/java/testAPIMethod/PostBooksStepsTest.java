@@ -1,5 +1,6 @@
 package testAPIMethod;
 
+import entity.Books;
 import io.qameta.allure.Description;
 
 import io.restassured.response.Response;
@@ -10,11 +11,16 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Story;
 import models.responses.ResponseSaveBooks;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import steps.asserts.LibraryDatabaseAssertions;
 import steps.asserts.SaveBooksAssertions;
+import steps.dataBaseSteps.DatabaseOperations;
 import steps.requestSteps.RequestSteps;
 import utils.DataHelper;
+
+import java.util.List;
 
 import static steps.requestSteps.RequestSteps.saveBook;
 import static utils.ErrorMessages.*;
@@ -23,6 +29,13 @@ import static utils.ErrorMessages.*;
 @Epic("Запросы на сохранение книг")
 @Story("Сохранение книг автора")
 public class PostBooksStepsTest {
+
+    private final DatabaseOperations databaseOperations = new DatabaseOperations();
+
+    @BeforeEach
+    public void clearDatabase() {
+        databaseOperations.deleteAll();
+    }
 
     @Test
     @DisplayName("Сохранение новой книги")
@@ -39,6 +52,9 @@ public class PostBooksStepsTest {
         Assertions.assertNotNull(responseSaveBooks);
 
         SaveBooksAssertions.assertResponseSaveBooks(responseSaveBooks);
+
+        List<Books> dbBooks = databaseOperations.findByBookTitle("Преступление и наказание");
+        LibraryDatabaseAssertions.assertBookSaved(dbBooks, "Преступление и наказание");
     }
 
     @Test
@@ -56,6 +72,9 @@ public class PostBooksStepsTest {
         SaveBooksAssertions.checkStatusCodeForSave(response, 400);
 
         SaveBooksAssertions.checkErrorMessageForSave(response, NO_BOOK_TITLE);
+
+        List<Books> dbBooks = databaseOperations.findByBookTitle(null);
+        LibraryDatabaseAssertions.assertBooksListIsEmpty(dbBooks);
     }
 
     @Test
@@ -65,7 +84,7 @@ public class PostBooksStepsTest {
         Authors unregisteredAuthor = DataHelper.getUnsavedAuthor();
 
         RequestSaveBooks requestSaveBooks = new RequestSaveBooks();
-        requestSaveBooks.setBookTitle("Test Book Title");
+        requestSaveBooks.setBookTitle("Преступление и наказание");
         requestSaveBooks.setAuthor(unregisteredAuthor);
 
         Response response = RequestSteps.saveBookAndGetResponse(requestSaveBooks);
@@ -73,6 +92,9 @@ public class PostBooksStepsTest {
         SaveBooksAssertions.checkStatusCodeForSave(response, 409);
 
         SaveBooksAssertions.checkErrorMessageForSave(response, AUTHOR_NOT_FOUND);
+
+        List<Books> dbBooks = databaseOperations.findByBookTitle("Преступление и наказание");
+        LibraryDatabaseAssertions.assertBooksListIsEmpty(dbBooks);
     }
 
     @Test
@@ -81,7 +103,7 @@ public class PostBooksStepsTest {
     public void testSaveBookWithoutAuthors() {
 
         RequestSaveBooks requestSaveBooks = new RequestSaveBooks();
-        requestSaveBooks.setBookTitle("преступление и наказание");
+        requestSaveBooks.setBookTitle("Преступление и наказание");
         requestSaveBooks.setAuthor(null);
 
         Response response = RequestSteps.saveBookAndGetResponse(requestSaveBooks);
@@ -89,6 +111,9 @@ public class PostBooksStepsTest {
         SaveBooksAssertions.checkStatusCodeForSave(response, 400);
 
         SaveBooksAssertions.checkErrorMessageForSave(response, NO_AUTHOR);
+
+        List<Books> dbBooks = databaseOperations.findByBookTitle("Преступление и наказание");
+        LibraryDatabaseAssertions.assertBooksListIsEmpty(dbBooks);
     }
 
     @Test
@@ -103,6 +128,9 @@ public class PostBooksStepsTest {
         SaveBooksAssertions.checkStatusCodeForSave(response, 409);
 
         SaveBooksAssertions.checkErrorMessageForSave(response, AUTHOR_NOT_FOUND);
+
+        List<Books> dbBooks = databaseOperations.findByBookTitle(book.getBookTitle());
+        LibraryDatabaseAssertions.assertBooksListIsEmpty(dbBooks);
     }
 }
 

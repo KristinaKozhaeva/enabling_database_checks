@@ -10,11 +10,14 @@ import models.requests.RequestGetBooks;
 
 import models.requests.RequestPostBooksXML;
 import models.responses.ResponsePostBooksXML;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.asserts.GetBookAssertions;
+import steps.asserts.LibraryDatabaseAssertions;
 import steps.requestSteps.RequestSteps;
 import utils.DataHelper;
+import steps.dataBaseSteps.DatabaseOperations;
 
 import java.util.List;
 
@@ -26,7 +29,14 @@ import static utils.ErrorMessages.INVALID_REQUIRED_PARAMETER;
 @Story("Получение книг автора")
 public class GetBooksStepsTest {
 
-        @Test
+    private final DatabaseOperations databaseOperations = new DatabaseOperations();
+
+    @BeforeEach
+    public void clearDatabase() {
+        databaseOperations.deleteAll();
+    }
+
+    @Test
         @DisplayName("Получение книг автора. Позитивный тест")
         @Description("Книги автора успешно получены")
         public void testGetBooksByAuthor() {
@@ -41,6 +51,9 @@ public class GetBooksStepsTest {
 
             GetBookAssertions.assertBooksListNotNullAndNotEmpty(booksList);
             GetBookAssertions.assertBooksMatchAuthor(booksList, expectedAuthor);
+
+        List<Books> dbBooks = databaseOperations.findByBookTitle(booksList.get(0).getBookTitle());
+        LibraryDatabaseAssertions.assertBooksMatchAuthor(dbBooks, booksList.get(0));
         }
 
 
@@ -60,12 +73,15 @@ public class GetBooksStepsTest {
 
         GetBookAssertions.assertBooksListNotNullAndNotEmpty(responseAuthorsBooksXML.getBooks());
         GetBookAssertions.assertBooksMatchAuthor(responseAuthorsBooksXML.getBooks(), expectedAuthor);
+
+        List<Books> dbBooks = databaseOperations.findByBookTitle(responseAuthorsBooksXML.getBooks().get(0).getBookTitle());
+        LibraryDatabaseAssertions.assertBooksMatchAuthor(dbBooks, responseAuthorsBooksXML.getBooks().get(0));
     }
 
     @Test
     @DisplayName("Получение книг не сохраненного автора в формате json. Негативный тест")
     @Description("Сервис возвращает http код ошибки = 400 с описанием: “Указанный автор не существует в таблице”")
-    public void successGetBooksByAuthor() {
+    public void testGetBooksUnsavedAuthor() {
         Authors author = DataHelper.getUnsavedAuthor();
 
         RequestGetBooks requestGetBooks = new RequestGetBooks();
@@ -76,6 +92,9 @@ public class GetBooksStepsTest {
         GetBookAssertions.checkStatusCode(response, 409);
 
         GetBookAssertions.asserErrorMessage(response, AUTHOR_NOT_FOUND);
+
+        List<Books> dbBooks = databaseOperations.findAll();
+        LibraryDatabaseAssertions.assertBooksListIsEmpty(dbBooks);
     }
 
     @Test
@@ -94,6 +113,9 @@ public class GetBooksStepsTest {
         checkStatusCode(response, 409);
 
         GetBookAssertions.asserErrorMessageXML(response, AUTHOR_NOT_FOUND);
+
+        List<Books> dbBooks = databaseOperations.findAll();
+        LibraryDatabaseAssertions.assertBooksListIsEmpty(dbBooks);
     }
 
     @Test
@@ -107,6 +129,9 @@ public class GetBooksStepsTest {
         checkStatusCode(response, 400);
 
         GetBookAssertions.asserErrorMessage(response, INVALID_REQUIRED_PARAMETER);
+
+        List<Books> dbBooks = databaseOperations.findAll();
+        LibraryDatabaseAssertions.assertBooksListIsEmpty(dbBooks);
     }
 
     @Test
@@ -122,6 +147,9 @@ public class GetBooksStepsTest {
         checkStatusCode(response, 409);
 
         GetBookAssertions.asserErrorMessageXML(response, INVALID_REQUIRED_PARAMETER);
+
+        List<Books> dbBooks = databaseOperations.findAll();
+        LibraryDatabaseAssertions.assertBooksListIsEmpty(dbBooks);
     }
 
     @Test
@@ -139,6 +167,9 @@ public class GetBooksStepsTest {
         GetBookAssertions.checkStatusCode(response, 200);
 
         GetBookAssertions.assertBooksListIsEmpty(booksList);
+
+        List<Books> dbBooks = databaseOperations.findByBookTitle(booksList.isEmpty() ? "" : booksList.get(0).getBookTitle());
+        LibraryDatabaseAssertions.assertBooksListIsEmpty(dbBooks);
     }
 
     @Test
@@ -156,5 +187,8 @@ public class GetBooksStepsTest {
         GetBookAssertions.checkStatusCode(response, 200);
 
         GetBookAssertions.assertBooksListIsEmpty(booksList);
+
+        List<Books> dbBooks = databaseOperations.findByBookTitle(booksList.isEmpty() ? "" : booksList.get(0).getBookTitle());
+        LibraryDatabaseAssertions.assertBooksListIsEmpty(dbBooks);
     }
 }
